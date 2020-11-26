@@ -1,6 +1,7 @@
 // User Vars----------------------
 
 var score = 0;
+var lives = 3;
 
 // Canvas Bal Vars----------------
 
@@ -72,14 +73,15 @@ function collisionDetection(){
   for(var c = 0; c < brickColumnCount; c++){
     for(var r = 0; r < brickRowCount; r++){
       var b = bricks[c][r];
-      if(x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight){
-        dy = -dy;
-        b.status = 0;
-        score++;
-        if(score == brickRowCount * brickColumnCount){
-          alert("YOU WIN, CONGRATULATIONS!");
-          document.location.reload();
-          clearInterval(interval);
+      if(b.status == 1){
+        if(x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight){
+          dy = -dy;
+          b.status = 0;
+          score++;
+          if(score == brickRowCount * brickColumnCount){
+            alert("YOU WIN, CONGRATULATIONS! Score:" + score);
+            document.location.reload();
+          }
         }
       }
     }
@@ -90,6 +92,12 @@ function drawScore(){
   ctx.font = "16px Arial";
   ctx.fillStyle = "#0095DD";
   ctx.fillText("Score: " + score, 8, 20);
+}
+
+function drawLives(){
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
 }
 
 function drawBall(){
@@ -132,6 +140,7 @@ function draw(){
   drawBall();
   drawPaddle();
   drawScore();
+  drawLives();
   collisionDetection();
   
   if (y + dy < ballRadius){
@@ -139,11 +148,18 @@ function draw(){
   }else if(y + dy > canvas.height-ballRadius){
     if(x > paddleX && x < paddleX + paddleWidth){
       dy = -dy;
-      dx += 4;
     } else{
-      alert("Game Over");
-      document.location.reload();
-      clearInterval(interval);
+      lives--;
+      if(!lives){
+        alert("Game Over");
+        document.location.reload();
+      }else {
+        x = canvas.width / 2;
+        y = canvas.height / 2;
+        dx = 2;
+        dy = 2;
+        paddleX = (canvas.width - paddleWidth) / 2;
+      }
     }
   }
   if(x + dx < ballRadius || x + dx > canvas.width-ballRadius){
@@ -164,6 +180,7 @@ function draw(){
 
   x += dx;
   y += dy;
+  requestAnimationFrame(draw);
 }
 
-var interval = setInterval(draw, 10);
+draw();
