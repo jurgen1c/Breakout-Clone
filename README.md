@@ -3,6 +3,7 @@
 > In this repo you will find a very basic version of the game breakout. Feel free to clone the repo and try it out, let me know what you think and any sugestions you might have. 
 Note: This is a project for fun so implementations will be long winded.
 
+![](./Assets/images/home_screenshot.png)
 
 ## Built With
 
